@@ -1,0 +1,14 @@
+FROM quay.io/toolbx/ubuntu-toolbox
+
+LABEL com.github.containers.toolbox="true" \
+    usage="This image is meant to be used with the toolbox or distrobox command" \
+    summary="An Ubuntu based OCI ready for music production, powered by Distrobox." \
+    maintainer="messaiga@gmail.com"
+
+# Copy the setup scripts and package list
+COPY ../scripts/dawbox.sh /
+COPY ../packages/dawbox.packages /
+
+# Run the setup scripts
+RUN chmod +x dawbox.sh distrobox-shims.sh && /dawbox.sh
+RUN rm /dawbox.sh /distrobox-shims.sh /dawbox.packages
