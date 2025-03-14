@@ -7,7 +7,9 @@ LABEL com.github.containers.toolbox="true" \
 
 # Copy the setup scripts and package list
 COPY ../scripts/dawbox.sh /
+COPY ../scripts/distrobox-shims.sh /
 COPY ../packages/dawbox.packages /
+COPY ../packages/boxkit.packages /
 
 # Run the setup scripts
 RUN chmod +x dawbox.sh distrobox-shims.sh && /dawbox.sh
