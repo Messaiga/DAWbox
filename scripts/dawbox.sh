@@ -6,4 +6,5 @@
 # Update the container and install packages
 apt update
 apt upgrade -y
-grep -v '^#' ./dawbox.packages | xargs apt install -y 
+grep -v '^#' ./dawbox.packages | xargs apt install -y
+apt install kxstudio-meta-all -y

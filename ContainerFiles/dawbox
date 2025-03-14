@@ -11,5 +11,6 @@ COPY ../scripts/distrobox-shims.sh /
 COPY ../packages/dawbox.packages /
 
 # Run the setup scripts
+RUN wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_11.2.0_all.deb
 RUN chmod +x dawbox.sh distrobox-shims.sh && /dawbox.sh
-RUN rm /dawbox.sh /distrobox-shims.sh /dawbox.packages
+RUN rm /dawbox.sh /distrobox-shims.sh /dawbox.packages kxstudio-repos_11.2.0_all.deb
