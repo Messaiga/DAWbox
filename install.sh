@@ -159,6 +159,7 @@ dawbox_prompt() {
                         return 0
                         ;;
                 esac
+                read -rsn1 key # Discard any leftover newline
                 ;;
             $'\x03') # Ctrl+C
                 echo "^C"
