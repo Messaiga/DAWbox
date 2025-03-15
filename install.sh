@@ -30,7 +30,7 @@ dawbox_config() {
   fi
 
   # Download the latest dawbox.ini
-  curl -s https://github.com/Messaiga/DAWbox/blob/main/dawbox.ini?raw=true -o "$TEMP_DAWBOX_INI"
+  curl -sL https://github.com/Messaiga/DAWbox/blob/main/dawbox.ini?raw=true -o "$TEMP_DAWBOX_INI"
 
   # Check if the configuration file exists, create it if it doesn't
   if [ ! -f "$CONFIG_FILE" ]; then
