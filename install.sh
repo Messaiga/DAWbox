@@ -1,15 +1,22 @@
 #!/bin/sh
 
 # Define the path to the configuration file
-CONFIG_FILE="/etc/distrobox/distrobox.ini"
+CONFIG_FILE="/etc/distrobox/dawbox.ini"
 # Define the temporary file for the downloaded dawbox.ini
 TEMP_DAWBOX_INI="dawbox.ini"
 # Define the marker string to identify DAWbox entries
 DAWBOX_MARKER="# DAWbox Configuration - DO NOT EDIT BELOW THIS LINE"
 DAWBOX_MARKER_END="# End DAWbox Configuration"
 
+# ANSI escape codes for text formatting
+ESC="\033"
+BOLD="${ESC}[1m"
+RESET="${ESC}[0m"
+HIGHLIGHT="${ESC}[7m"
+
 # Function to handle DAWbox configuration
 dawbox-config() {
+
   # Check if we have write access to the config file's directory
   if [ ! -w "$(dirname "$CONFIG_FILE")" ]; then
     echo "Insufficient permissions to modify $CONFIG_FILE."
@@ -65,7 +72,104 @@ dawbox-config() {
   rm "$TEMP_DAWBOX_INI"
 }
 
-# Call the dawbox-config function to execute the configuration logic
-dawbox-config
+# Function to check if DAWbox is installed
+dawbox-check() {
+    if distrobox ls | grep -iq dawbox; then
+        echo "DAWbox in already installed."
+        return 0
+    else
+        echo "DAWbox is not installed."
+        return 1
+    fi
+}
+
+# Function to install DAWbox
+dawbox-install() {
+
+    # Call the dawbox-config function to execute the configuration logic
+    dawbox-config
+
+    #Check if DAWbox is already installed
+    dawbox-check
+    local check_result=$?
+
+    if [ "$check_result" -eq 0 ]; then
+        echo "DAWbox is already installed.  Skipping installation."
+        return 0 # DAWbox is already installed, so we are done.
+    elif [ "$check_result" -eq 1 ]; then
+        echo "Installing DAWbox..."
+        distrobox assemble create --file=/etc/distrobox/dawbox.ini
+        echo "DAWbox installed successfully."
+        return 0 #DAWbox was installed.
+    else
+        echo "Error checking DAWbox status."
+        return 1 # Error checking DAWbox status.
+    fi
+}
+
+# Function to prompt user for action
+dawbox-prompt() {
+    local options=("Check if DAWbox is installed" "Install DAWbox" "Exit")
+    local selected=0
+    local key
+
+    # Function to redraw the menu
+    redraw_menu() {
+        clear
+        echo "Welcome to the DAWbox installer!"
+        echo "Please choose an option:"
+        for i in "${!options[@]}"; do
+            if [ "$i" -eq "$selected" ]; then
+                echo -e "${HIGHLIGHT}  ${options[$i]}${RESET}"
+            else
+                echo "  ${options[$i]}"
+            fi
+        done
+    }
+
+    # Main loop
+    while true; do
+        redraw_menu
+
+        # Read a single character without waiting for Enter
+        read -rsn1 key
+
+        case "$key" in
+            $'\x1b') # Escape sequence (arrow keys)
+                read -rsn2 key
+                case "$key" in
+                    [A) # Up arrow
+                        selected=$(( (selected - 1 + ${#options[@]}) % ${#options[@]} ))
+                        ;;
+                    [B) # Down arrow
+                        selected=$(( (selected + 1) % ${#options[@]} ))
+                        ;;
+                esac
+                ;;
+            $'\x0a') # Enter key
+                case "$selected" in
+                    0)
+                        dawbox-check
+                        ;;
+                    1)
+                        dawbox-install
+                        ;;
+                    2)
+                        echo "Exiting..."
+                        return 0
+                        ;;
+                esac
+                ;;
+            $'\x03') # Ctrl+C
+                echo "^C"
+                echo "Exiting..."
+                return 0
+                ;;
+        esac
+    done
+}
+
+# Call the dawbox-prompt function to start the interactive process
+dawbox-prompt
 
 exit 0
