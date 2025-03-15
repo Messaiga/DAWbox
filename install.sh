@@ -15,7 +15,7 @@ RESET="${ESC}[0m"
 HIGHLIGHT="${ESC}[7m"
 
 # Function to handle DAWbox configuration
-dawbox-config() {
+dawbox_config() {
 
   # Check if we have write access to the config file's directory
   if [ ! -w "$(dirname "$CONFIG_FILE")" ]; then
@@ -73,7 +73,7 @@ dawbox-config() {
 }
 
 # Function to check if DAWbox is installed
-dawbox-check() {
+dawbox_check() {
     if distrobox ls | grep -iq dawbox; then
         echo "DAWbox in already installed."
         return 0
@@ -84,13 +84,13 @@ dawbox-check() {
 }
 
 # Function to install DAWbox
-dawbox-install() {
+dawbox_install() {
 
-    # Call the dawbox-config function to execute the configuration logic
-    dawbox-config
+    # Call the dawbox_config function to execute the configuration logic
+    dawbox_config
 
     #Check if DAWbox is already installed
-    dawbox-check
+    dawbox_check
     local check_result=$?
 
     if [ "$check_result" -eq 0 ]; then
@@ -108,7 +108,7 @@ dawbox-install() {
 }
 
 # Function to prompt user for action
-dawbox-prompt() {
+dawbox_prompt() {
     local options=("Check if DAWbox is installed" "Install DAWbox" "Exit")
     local selected=0
     local key
@@ -149,10 +149,10 @@ dawbox-prompt() {
             $'\x0a') # Enter key
                 case "$selected" in
                     0)
-                        dawbox-check
+                        dawbox_check
                         ;;
                     1)
-                        dawbox-install
+                        dawbox_install
                         ;;
                     2)
                         echo "Exiting..."
@@ -169,7 +169,7 @@ dawbox-prompt() {
     done
 }
 
-# Call the dawbox-prompt function to start the interactive process
-dawbox-prompt
+# Call the dawbox_prompt function to start the interactive process
+dawbox_prompt
 
 exit 0
