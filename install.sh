@@ -8,6 +8,14 @@ TEMP_DAWBOX_INI="dawbox.ini"
 DAWBOX_MARKER="# DAWbox Configuration - DO NOT EDIT BELOW THIS LINE"
 DAWBOX_MARKER_END="# End DAWbox Configuration"
 
+# Check if we have write access to the config file's directory
+if [ ! -w "$(dirname "$CONFIG_FILE")" ]; then
+  echo "Insufficient permissions to modify $CONFIG_FILE."
+  echo "Attempting to re-run with sudo..."
+  sudo "$0" "$@"
+  exit $?
+fi
+
 # Download the latest dawbox.ini
 curl -s https://github.com/Messaiga/DAWbox/blob/main/dawbox.ini?raw=true -o "$TEMP_DAWBOX_INI"
 
