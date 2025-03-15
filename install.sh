@@ -9,7 +9,7 @@ DAWBOX_MARKER="# DAWbox Configuration - DO NOT EDIT BELOW THIS LINE"
 DAWBOX_MARKER_END="# End DAWbox Configuration"
 
 # Download the latest dawbox.ini
-curl -s https://github.com/Messaiga/DAWbox/blob/main/dawbox.ini?raw=true --output "$TEMP_DAWBOX_INI"
+curl -s https://github.com/Messaiga/DAWbox/blob/main/dawbox.ini?raw=true -o "$TEMP_DAWBOX_INI"
 
 # Check if the configuration file exists, create it if it doesn't
 if [ ! -f "$CONFIG_FILE" ]; then
@@ -42,7 +42,11 @@ if [ "$existing_dawbox_config" != "$new_dawbox_config" ]; then
 
   # Append the new DAWbox configuration
   echo "$new_dawbox_config" >> "$CONFIG_FILE"
-  echo "$DAWBOX_MARKER_END" >> "$CONFIG_FILE"
+  
+  # Check if the end marker already exists before appending it
+  if ! grep -qF "$DAWBOX_MARKER_END" "$CONFIG_FILE"; then
+    echo "$DAWBOX_MARKER_END" >> "$CONFIG_FILE"
+  fi
 else
   echo "DAWbox configuration is up to date, no changes needed."
 fi
