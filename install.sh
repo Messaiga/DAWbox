@@ -132,11 +132,11 @@ dawbox_prompt() {
         redraw_menu
 
         # Read a single character without waiting for Enter
-        read -rsn1 key
+        read -sn1 key
 
         case "$key" in
             $'\x1b') # Escape sequence (arrow keys)
-                read -rsn2 key
+                read -sn2 key
                 case "$key" in
                     [A) # Up arrow
                         selected=$(( (selected - 1 + ${#options[@]}) % ${#options[@]} ))
@@ -159,7 +159,7 @@ dawbox_prompt() {
                         return 0
                         ;;
                 esac
-                read -rsn1 key # Discard any leftover newline
+                read -sn1 key # Discard any leftover newline
                 ;;
             $'\x03') # Ctrl+C
                 echo "^C"
