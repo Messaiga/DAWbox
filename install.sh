@@ -16,12 +16,17 @@ HIGHLIGHT="${ESC}[7m"
 
 # Function to handle DAWbox configuration
 dawbox_config() {
+  # If we are here, we have permissions or we ran with sudo
+  if [ "$1" = "config-sudo" ]; then
+    shift
+  fi
+
   # Check if we have write access to the config file's directory
   if [ ! -w "$(dirname "$CONFIG_FILE")" ]; then
     echo "Insufficient permissions to modify $CONFIG_FILE."
-    echo "Attempting to re-run dawbox_config with sudo..."
-    sudo "$0" config "$@"
-    exit $?
+    echo "Attempting to run dawbox_config with sudo..."
+    sudo "$0" config-sudo "$@"
+    return $?
   fi
 
   # Download the latest dawbox.ini
@@ -135,53 +140,15 @@ dawbox_prompt() {
     done
 }
 
+# Check if the script was called with the "config-sudo" argument
+if [ "$1" = "config-sudo" ]; then
+  dawbox_config config-sudo
+  exit 0
+fi
+
 # Check if the script was called with the "config" argument
 if [ "$1" = "config" ]; then
-  dawbox_config--- a/var/home/ryan/Projects/SysAdmin/DAWbox/DAWbox/install.sh
-  +++ b/var/home/ryan/Projects/SysAdmin/DAWbox/DAWbox/install.sh
-  @@ -27,10 +27,15 @@
-     # Check if we have write access to the config file's directory
-     if [ ! -w "$(dirname "$CONFIG_FILE")" ]; then
-       echo "Insufficient permissions to modify $CONFIG_FILE."
-  -    echo "Attempting to re-run dawbox_config with sudo..."
-  -    sudo "$0" config "$@"
-  -    exit $?
-  +    echo "Attempting to run dawbox_config with sudo..."
-  +    sudo "$0" config-sudo "$@"
-  +    return $?
-     fi
-  +
-  +  # If we are here, we have permissions or we ran with sudo
-  +  if [ "$1" = "config-sudo" ]; then
-  +    shift
-  +  fi
-   
-     # Download the latest dawbox.ini
-     curl -s https://github.com/Messaiga/DAWbox/blob/main/dawbox.ini?raw=true -o "$TEMP_DAWBOX_INI"
-  @@ -91,7 +96,7 @@
-       # Call the dawbox_config function to execute the configuration logic
-       dawbox_config
-   
-  -    #Check if DAWbox is already installed
-  +    # Check if DAWbox is already installed
-       dawbox_check
-       local check_result=$?
-   
-  @@ -141,6 +146,12 @@
-     exit 0
-   fi
-   
-  +# Check if the script was called with the "config-sudo" argument
-  +if [ "$1" = "config-sudo" ]; then
-  +  dawbox_config config-sudo
-  +  exit 0
-  +fi
-  +
-   # Call the dawbox_prompt function to start the interactive process
-   dawbox_prompt
-   
-  
-  
+  dawbox_config
   exit 0
 fi
 
