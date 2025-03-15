@@ -146,7 +146,7 @@ dawbox_prompt() {
                         ;;
                 esac
                 ;;
-            $'\x0a') # Enter key
+            $'\x0d') # Enter key (Carriage Return)
                 case "$selected" in
                     0)
                         dawbox_check
