@@ -109,62 +109,29 @@ dawbox_install() {
 
 # Function to prompt user for action
 dawbox_prompt() {
-    local options=("Check if DAWbox is installed" "Install DAWbox" "Exit")
-    local selected=0
-    local key
-
-    # Function to redraw the menu
-    redraw_menu() {
-        clear
+    while true; do
         echo "Welcome to the DAWbox installer!"
         echo "Please choose an option:"
-        for i in "${!options[@]}"; do
-            if [ "$i" -eq "$selected" ]; then
-                echo -e "${HIGHLIGHT}  ${options[$i]}${RESET}"
-            else
-                echo "  ${options[$i]}"
-            fi
-        done
-    }
+        echo "  1) Check if DAWbox is installed"
+        echo "  2) Install DAWbox"
+        echo "  3) Exit"
+        read -p "Enter your choice (1-3): " choice
 
-    # Main loop
-    while true; do
-        redraw_menu
-
-        # Read a single character without waiting for Enter
-        read -sn1 key
-
-        case "$key" in
-            $'\x1b') # Escape sequence (arrow keys)
-                read -sn2 key
-                case "$key" in
-                    [A) # Up arrow
-                        selected=$(( (selected - 1 + ${#options[@]}) % ${#options[@]} ))
-                        ;;
-                    [B) # Down arrow
-                        selected=$(( (selected + 1) % ${#options[@]} ))
-                        ;;
-                esac
+        case "$choice" in
+            1)
+                dawbox_check
+                return 0
                 ;;
-            $'\x0d') # Enter key (Carriage Return)
-                case "$selected" in
-                    0)
-                        dawbox_check
-                        ;;
-                    1)
-                        dawbox_install
-                        ;;
-                    2)
-                        echo "Exiting..."
-                        return 0
-                        ;;
-                esac
-                read -sn1 key # Discard any leftover newline
+            2)
+                dawbox_install
+                return 0
                 ;;
-            $'\x03') # Ctrl+C
-                echo "^C"
+            3)
                 echo "Exiting..."
                 return 0
+                ;;
+            *)
+                echo "Invalid choice. Please enter 1, 2, or 3."
                 ;;
         esac
     done
