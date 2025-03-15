@@ -101,7 +101,7 @@ dawbox_install() {
         return 0 # DAWbox is already installed, so we are done.
     elif [ "$check_result" -eq 1 ]; then
         echo "Installing DAWbox..."
-        distrobox assemble create --file=/etc/distrobox/dawbox.ini
+        distrobox assemble create --file /etc/distrobox/dawbox.ini
         echo "DAWbox installed successfully."
         return 0 #DAWbox was installed.
     else
