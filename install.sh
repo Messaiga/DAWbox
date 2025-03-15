@@ -16,12 +16,11 @@ HIGHLIGHT="${ESC}[7m"
 
 # Function to handle DAWbox configuration
 dawbox_config() {
-
   # Check if we have write access to the config file's directory
   if [ ! -w "$(dirname "$CONFIG_FILE")" ]; then
     echo "Insufficient permissions to modify $CONFIG_FILE."
-    echo "Attempting to re-run with sudo..."
-    sudo "$0" "$@"
+    echo "Attempting to re-run dawbox_config with sudo..."
+    sudo "$0" config "$@"
     exit $?
   fi
 
@@ -85,7 +84,6 @@ dawbox_check() {
 
 # Function to install DAWbox
 dawbox_install() {
-
     # Call the dawbox_config function to execute the configuration logic
     dawbox_config
 
@@ -136,6 +134,12 @@ dawbox_prompt() {
         esac
     done
 }
+
+# Check if the script was called with the "config" argument
+if [ "$1" = "config" ]; then
+  dawbox_config
+  exit 0
+fi
 
 # Call the dawbox_prompt function to start the interactive process
 dawbox_prompt
