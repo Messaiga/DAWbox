@@ -13,7 +13,9 @@ You will need:
 
 ## Installation
 Open your terminal of choice and run:
-`curl -sL https://raw.githubusercontent.com/Messaiga/DAWbox/refs/heads/main/install.sh -o install.sh && chmod +x install.sh && ./install.sh`
+```
+curl -sL https://raw.githubusercontent.com/Messaiga/DAWbox/refs/heads/main/install.sh -o install.sh && chmod +x install.sh && ./install.sh
+```
 
 - Select 1 to check if dawbox is installed.
 - Select 2 to install dawbox.
