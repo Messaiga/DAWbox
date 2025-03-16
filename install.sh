@@ -4,9 +4,9 @@
 CONFIG_FILE="/etc/distrobox/dawbox.ini"
 # Define the temporary file for the downloaded dawbox.ini
 TEMP_DAWBOX_INI="dawbox.ini"
-# Define the marker string to identify DAWbox entries
-DAWBOX_MARKER="# DAWbox Configuration - DO NOT EDIT BELOW THIS LINE"
-DAWBOX_MARKER_END="# End DAWbox Configuration"
+# Define the marker string to identify DAWbox entries (NO LONGER NEEDED)
+# DAWBOX_MARKER="# DAWbox Configuration - DO NOT EDIT BELOW THIS LINE"
+# DAWBOX_MARKER_END="# End DAWbox Configuration"
 
 # ANSI escape codes for text formatting
 ESC="\033"
@@ -32,48 +32,54 @@ dawbox_config() {
   # Download the latest dawbox.ini
   curl -sL https://github.com/Messaiga/DAWbox/blob/main/dawbox.ini?raw=true -o "$TEMP_DAWBOX_INI"
 
-  # Check if the configuration file exists, create it if it doesn't
-  if [ ! -f "$CONFIG_FILE" ]; then
-    echo "Creating $CONFIG_FILE"
-    touch "$CONFIG_FILE"
-  fi
+  # Check if the configuration file exists, create it if it doesn't (NO LONGER NEEDED)
+  # if [ ! -f "$CONFIG_FILE" ]; then
+  #   echo "Creating $CONFIG_FILE"
+  #   touch "$CONFIG_FILE"
+  # fi
 
-  # Check if the marker exists in the config file
-  if ! grep -qF "$DAWBOX_MARKER" "$CONFIG_FILE"; then
-    echo "Adding DAWbox marker to $CONFIG_FILE"
-    echo "$DAWBOX_MARKER" >> "$CONFIG_FILE"
-  fi
+  # Check if the marker exists in the config file (NO LONGER NEEDED)
+  # if ! grep -qF "$DAWBOX_MARKER" "$CONFIG_FILE"; then
+  #   echo "Adding DAWbox marker to $CONFIG_FILE"
+  #   echo "$DAWBOX_MARKER" >> "$CONFIG_FILE"
+  # fi
 
-  # Extract the DAWbox section from the config file
-  existing_dawbox_config=$(sed -n "/$DAWBOX_MARKER/,/$DAWBOX_MARKER_END/p" "$CONFIG_FILE")
+  # Extract the DAWbox section from the config file (NO LONGER NEEDED)
+  # existing_dawbox_config=$(sed -n "/$DAWBOX_MARKER/,/$DAWBOX_MARKER_END/p" "$CONFIG_FILE")
 
   # Extract the content of the downloaded dawbox.ini
-  new_dawbox_config=$(cat "$TEMP_DAWBOX_INI")
+  # new_dawbox_config=$(cat "$TEMP_DAWBOX_INI")
 
-  # Compare the existing and new DAWbox configurations
-  if [ "$existing_dawbox_config" != "$new_dawbox_config" ]; then
-    echo "DAWbox configuration differs, updating $CONFIG_FILE"
+  # Compare the existing and new DAWbox configurations (NO LONGER NEEDED)
+  # if [ "$existing_dawbox_config" != "$new_dawbox_config" ]; then
+  #   echo "DAWbox configuration differs, updating $CONFIG_FILE"
 
     # Create a backup of the config file
-    cp "$CONFIG_FILE" "${CONFIG_FILE}.bak"
-    echo "Backed up $CONFIG_FILE to ${CONFIG_FILE}.bak"
-
-    # Remove the old DAWbox section
-    sed -i "/$DAWBOX_MARKER/,/$DAWBOX_MARKER_END/d" "$CONFIG_FILE"
-
-    # Append the new DAWbox configuration
-    echo "$new_dawbox_config" >> "$CONFIG_FILE"
-
-    # Check if the end marker already exists before appending it
-    if ! grep -qF "$DAWBOX_MARKER_END" "$CONFIG_FILE"; then
-      echo "$DAWBOX_MARKER_END" >> "$CONFIG_FILE"
+    if [ -f "$CONFIG_FILE" ]; then
+      cp "$CONFIG_FILE" "${CONFIG_FILE}.bak"
+      echo "Backed up $CONFIG_FILE to ${CONFIG_FILE}.bak"
     fi
-  else
-    echo "DAWbox configuration is up to date, no changes needed."
-  fi
 
-  # Clean up the temporary dawbox.ini file
-  rm "$TEMP_DAWBOX_INI"
+    # Remove the old DAWbox section (NO LONGER NEEDED)
+    # sed -i "/$DAWBOX_MARKER/,/$DAWBOX_MARKER_END/d" "$CONFIG_FILE"
+
+    # Replace the config file with the new one
+    echo "Replacing $CONFIG_FILE with the latest configuration."
+    mv "$TEMP_DAWBOX_INI" "$CONFIG_FILE"
+
+    # Append the new DAWbox configuration (NO LONGER NEEDED)
+    # echo "$new_dawbox_config" >> "$CONFIG_FILE"
+
+    # Check if the end marker already exists before appending it (NO LONGER NEEDED)
+    # if ! grep -qF "$DAWBOX_MARKER_END" "$CONFIG_FILE"; then
+    #   echo "$DAWBOX_MARKER_END" >> "$CONFIG_FILE"
+    # fi
+  # else
+  #   echo "DAWbox configuration is up to date, no changes needed."
+  # fi
+
+  # Clean up the temporary dawbox.ini file (NO LONGER NEEDED)
+  # rm "$TEMP_DAWBOX_INI"
 }
 
 # Function to check if DAWbox is installed
@@ -102,6 +108,7 @@ dawbox_install() {
     elif [ "$check_result" -eq 1 ]; then
         echo "Installing DAWbox..."
         distrobox assemble create --file /etc/distrobox/dawbox.ini
+        distrobox stop dawbox
         echo "DAWbox installed successfully."
         return 0 #DAWbox was installed.
     else
