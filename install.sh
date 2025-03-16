@@ -143,7 +143,7 @@ dawbox_rm() {
     if [ "$check_result" -eq 0 ]; then
         echo "Removing DAWbox..."
         distrobox stop dawbox
-        distrobox remove dawbox
+        distrobox rm dawbox
         return 0 # DAWbox is now removed, so we are done.
     elif [ "$check_result" -eq 1 ]; then
         echo "DAWbox isn't installed, there's nothing to remove."
