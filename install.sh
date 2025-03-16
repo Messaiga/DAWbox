@@ -111,6 +111,49 @@ dawbox_install() {
     fi
 }
 
+# Function to update DAWbox
+dawbox_update() {
+    # Call the dawbox_config function to execute the configuration logic
+    dawbox_config
+
+    #Check if DAWbox is already installed
+    dawbox_check
+    local check_result=$?
+
+    if [ "$check_result" -eq 0 ]; then
+        echo "DAWbox is already installed.  Updating."
+        distrobox upgrade dawbox
+        return 0 # DAWbox is already installed, we can update it.
+    elif [ "$check_result" -eq 1 ]; then
+        echo "Distrobox isn't installed, there's nothing to update."
+        return 0 # DAWbox is not installed, there's nothing to update.
+    else
+        echo "Error checking DAWbox status."
+        return 1 # Error checking DAWbox status.
+    fi
+}
+
+# Function to remove DAWbox
+
+dawbox_rm() {
+  # Check if DAWbox is installed
+  dawbox_check
+    local check_result=$?
+
+    if [ "$check_result" -eq 0 ]; then
+        echo "Removing DAWbox..."
+        distrobox stop dawbox
+        distrobox remove dawbox
+        return 0 # DAWbox is now removed, so we are done.
+    elif [ "$check_result" -eq 1 ]; then
+        echo "DAWbox isn't installed, there's nothing to remove."
+        return 0 # DAWbox is not installed, so we are done.
+    else
+        echo "Error removing DAWbox."
+        return 1 # Error checking DAWbox status.
+    fi
+}
+
 # Function to prompt user for action
 dawbox_prompt() {
     while true; do
@@ -118,8 +161,10 @@ dawbox_prompt() {
         echo "Please choose an option:"
         echo "  1) Check if DAWbox is installed"
         echo "  2) Install DAWbox"
-        echo "  3) Exit"
-        read -p "Enter your choice (1-3): " choice
+        echo "  3) Update DAWbox"
+        echo "  4) Remove DAWbox"
+        echo "  5) Exit"
+        read -p "Enter your choice (1-5): " choice
 
         case "$choice" in
             1)
@@ -131,11 +176,19 @@ dawbox_prompt() {
                 return 0
                 ;;
             3)
+                dawbox_update
+                return 0
+                ;;
+            4)
+                dawbox_rm 
+                return 0
+                ;;
+            5)
                 echo "Exiting..."
                 return 0
                 ;;
             *)
-                echo "Invalid choice. Please enter 1, 2, or 3."
+                echo "Invalid choice. Please enter 1, 2, 3, 4, or 5"
                 ;;
         esac
     done
