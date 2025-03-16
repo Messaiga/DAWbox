@@ -7,8 +7,6 @@ TEMP_DAWBOX_INI="dawbox.ini"
 # Define the marker string to identify DAWbox entries
 DAWBOX_MARKER="# DAWbox Configuration - DO NOT EDIT BELOW THIS LINE"
 DAWBOX_MARKER_END="# End DAWbox Configuration"
-# Define the marker file to indicate that the container has been initialized
-INITIALIZED_MARKER="/etc/distrobox/dawbox_initialized"
 
 # ANSI escape codes for text formatting
 ESC="\033"
@@ -89,40 +87,6 @@ dawbox_check() {
     fi
 }
 
-# Function to create the marker file
-dawbox_create_marker() {
-  local marker_file="$1"
-  if [ ! -w "$(dirname "$marker_file")" ]; then
-    echo "Insufficient permissions to create $marker_file."
-    echo "Attempting to create marker with sudo..."
-    sudo touch "$marker_file"
-  else
-    touch "$marker_file"
-  fi
-}
-
-# Function to check if the marker file exists
-dawbox_check_marker() {
-    local marker_file="$1"
-    if [ -f "$marker_file" ]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Function to remove the marker file
-dawbox_rm_marker() {
-  local marker_file="$1"
-  if [ ! -w "$(dirname "$marker_file")" ]; then
-    echo "Insufficient permissions to remove $marker_file."
-    echo "Attempting to remove marker with sudo..."
-    sudo rm "$marker_file"
-  else
-    rm "$marker_file"
-  fi
-}
-
 # Function to install DAWbox
 dawbox_install() {
     # Call the dawbox_config function to execute the configuration logic
@@ -131,7 +95,6 @@ dawbox_install() {
     #Check if DAWbox is already installed
     dawbox_check
     local check_result=$?
-    local INITIALIZED_MARKER="/etc/distrobox/dawbox_initialized"
 
     if [ "$check_result" -eq 0 ]; then
         echo "DAWbox is already installed.  Skipping installation."
@@ -139,67 +102,11 @@ dawbox_install() {
     elif [ "$check_result" -eq 1 ]; then
         echo "Installing DAWbox..."
         distrobox assemble create --file /etc/distrobox/dawbox.ini
-        
-        # Check if the initialization marker file exists
-        dawbox_check_marker "$INITIALIZED_MARKER"
-        local marker_check_result=$?
-        if [ "$marker_check_result" -ne 0 ]; then
-            echo "First run detected. Stopping DAWbox for proper initialization..."
-            distrobox stop dawbox
-            #distrobox start dawbox
-            dawbox_create_marker "$INITIALIZED_MARKER"
-            echo "DAWbox initialized."
-        else
-            echo "DAWbox already initialized."
-        fi
-        
+        distrobox stop dawbox
         echo "DAWbox installed successfully."
         return 0 #DAWbox was installed.
     else
         echo "Error checking DAWbox status."
-        return 1 # Error checking DAWbox status.
-    fi
-}
-
-# Function to update DAWbox
-dawbox_update() {
-    # Call the dawbox_config function to execute the configuration logic
-    dawbox_config
-
-    #Check if DAWbox is already installed
-    dawbox_check
-    local check_result=$?
-
-    if [ "$check_result" -eq 0 ]; then
-        echo "DAWbox is already installed.  Updating."
-        distrobox upgrade dawbox
-        return 0 # DAWbox is already installed, we can update it.
-    elif [ "$check_result" -eq 1 ]; then
-        echo "DAWbox isn't installed, there's nothing to update."
-        return 0 # DAWbox is not installed, there's nothing to update.
-    else
-        echo "Error checking DAWbox status."
-        return 1 # Error checking DAWbox status.
-    fi
-}
-
-# Function to remove DAWbox
-
-dawbox_rm() {
-  # Check if DAWbox is installed
-  dawbox_check
-    local check_result=$?
-
-    if [ "$check_result" -eq 0 ]; then
-        echo "Removing DAWbox..."
-        distrobox stop dawbox
-        distrobox rm dawbox
-        return 0 # DAWbox is now removed, so we are done.
-    elif [ "$check_result" -eq 1 ]; then
-        echo "DAWbox isn't installed, there's nothing to remove."
-        return 0 # DAWbox is not installed, so we are done.
-    else
-        echo "Error removing DAWbox."
         return 1 # Error checking DAWbox status.
     fi
 }
@@ -211,34 +118,24 @@ dawbox_prompt() {
         echo "Please choose an option:"
         echo "  1) Check if DAWbox is installed"
         echo "  2) Install DAWbox"
-        echo "  3) Update DAWbox"
-        echo "  4) Remove DAWbox"
-        echo "  5) Remove Initialization Marker"
-        echo "  6) Exit"
-        read -p "Enter your choice (1-6): " choice
+        echo "  3) Exit"
+        read -p "Enter your choice (1-3): " choice
 
         case "$choice" in
             1)
                 dawbox_check
+                return 0
                 ;;
             2)
                 dawbox_install
+                return 0
                 ;;
             3)
-                dawbox_update
-                ;;
-            4)
-                dawbox_rm
-                ;;
-            5)
-                dawbox_rm_marker "$INITIALIZED_MARKER"
-                ;;
-            6)
                 echo "Exiting..."
                 return 0
                 ;;
             *)
-                echo "Invalid choice. Please enter 1, 2, 3, 4, 5, or 6"
+                echo "Invalid choice. Please enter 1, 2, or 3."
                 ;;
         esac
     done
