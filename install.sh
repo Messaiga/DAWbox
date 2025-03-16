@@ -7,6 +7,8 @@ TEMP_DAWBOX_INI="dawbox.ini"
 # Define the marker string to identify DAWbox entries
 DAWBOX_MARKER="# DAWbox Configuration - DO NOT EDIT BELOW THIS LINE"
 DAWBOX_MARKER_END="# End DAWbox Configuration"
+# Define the marker file to indicate that the container has been initialized
+INITIALIZED_MARKER="/etc/distrobox/dawbox_initialized"
 
 # ANSI escape codes for text formatting
 ESC="\033"
@@ -106,9 +108,9 @@ dawbox_install() {
         
         # Check if the initialization marker file exists
         if [ ! -f "$INITIALIZED_MARKER" ]; then
-            echo "First run detected. Stopping and restarting DAWbox for proper initialization..."
+            echo "First run detected. Stopping DAWbox for proper initialization..."
             distrobox stop dawbox
-            distrobox start dawbox
+            #distrobox start dawbox
             touch "$INITIALIZED_MARKER"
             echo "DAWbox initialized."
         fi
@@ -120,7 +122,6 @@ dawbox_install() {
         return 1 # Error checking DAWbox status.
     fi
 }
-
 
 # Function to update DAWbox
 dawbox_update() {
@@ -180,16 +181,16 @@ dawbox_prompt() {
         case "$choice" in
             1)
                 dawbox_check
-                ;; #Removed return 0
+                ;;
             2)
                 dawbox_install
-                ;; #Removed return 0
+                ;;
             3)
                 dawbox_update
-                ;; #Removed return 0
+                ;;
             4)
-                dawbox_rm 
-                ;; #Removed return 0
+                dawbox_rm
+                ;;
             5)
                 echo "Exiting..."
                 return 0
