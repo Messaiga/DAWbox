@@ -36,3 +36,5 @@
 ## REAPER
 
 # /var/home/ryan/dawbox/.config/REAPER/Effects
+
+# This solution doesn't seem practical since bind mounts override the contents of the container path, revisit later.
