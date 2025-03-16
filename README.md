@@ -19,4 +19,6 @@ curl -sL https://raw.githubusercontent.com/Messaiga/DAWbox/refs/heads/main/insta
 
 - Select 1 to check if dawbox is installed.
 - Select 2 to install dawbox.
-- Select 3 to exit.
+- Select 3 to update dawbox.
+- Select 4 to remove dawbox.
+- Select 5 to exit.
