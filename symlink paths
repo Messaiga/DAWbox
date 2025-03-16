@@ -1,0 +1,38 @@
+## LADSPA
+
+# /usr/lib/ladspa -> /var/home/ryan/dawbox/.ladspa
+# /usr/local/lib/ladspa -> /var/home/ryan/dawbox/.ladspa
+
+## DSSI
+
+# /usr/lib/dssi -> /var/home/ryan/dawbox/.dssi
+# /usr/local/lib/dssi -> /var/home/ryan/dawbox/.dssi
+
+## LV2
+
+# /usr/lib/lv2 -> /var/home/ryan/dawbox/.lv2
+# /usr/local/lib/lv2 -> /var/home/ryan/dawbox/.lv2
+
+## VST2
+
+# /usr/lib/lxvst -> /var/home/ryan/dawbox/.lxvst
+# /usr/lib/vst -> /var/home/ryan/dawbox/.vst
+# /usr/local/lib/lxvst -> /usr/local/lib/vst/var/home/ryan/dawbox/.lxvst
+
+## VST3
+
+# /usr/lib/vst3 -> /var/home/ryan/dawbox/.vst3
+# /usr/local/lib/vst3 -> /var/home/ryan/dawbox/.vst3
+
+## Soundfonts
+# /usr/share/soundfonts -> /var/home/ryan/dawbox/.soundfonts
+# /usr/share/sounds/sf2 -> /var/home/ryan/dawbox/.sounds/sf2
+# /usr/share/sounds/sf3 -> /var/home/ryan/dawbox/.sounds/sf3
+
+## SFZ
+
+# /usr/share/sounds/sfz -> /var/home/ryan/dawbox/.sounds/sfz
+
+## REAPER
+
+# /var/home/ryan/dawbox/.config/REAPER/Effects
