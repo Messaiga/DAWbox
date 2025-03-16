@@ -4,6 +4,10 @@
 CONFIG_FILE="/etc/distrobox/dawbox.ini"
 # Define the temporary file for the downloaded dawbox.ini
 TEMP_DAWBOX_INI="dawbox.ini"
+# Define the path to the RaySession configuration file
+RS_CONFIG_FILE="$HOME/dawbox/.config/RaySession/RaySession.conf"
+#Define the temporary file for the downloaded RaySession.conf
+TEMP_RS_CONFIG=RaySession.conf
 
 # ANSI escape codes for text formatting
 ESC="\033"
@@ -27,7 +31,7 @@ dawbox_config() {
   fi
 
   # Download the latest dawbox.ini
-  curl -sL https://github.com/Messaiga/DAWbox/blob/main/dawbox.ini?raw=true -o "$TEMP_DAWBOX_INI"
+  curl -sL https://github.com/Messaiga/DAWbox/blob/main/config/dawbox.ini?raw=true -o "$TEMP_DAWBOX_INI"
 
     # Create a backup of the config file
     if [ -f "$CONFIG_FILE" ]; then
@@ -39,6 +43,24 @@ dawbox_config() {
     echo "Replacing $CONFIG_FILE with the latest configuration."
     mv "$TEMP_DAWBOX_INI" "$CONFIG_FILE"
 
+}
+
+raysession_config() {
+  # Download the latest RaySession.conf
+  curl -sL https://github.com/Messaiga/DAWbox/blob/main/config/RaySession.conf?raw=true -o "$TEMP_RS_CONFIG"
+
+  # Ensure the directory exists silently
+  mkdir -p "$HOME/dawbox/.config/RaySession/" > /dev/null 2>&1
+
+  # Create a backup of the config file
+  if [ -f "$RS_CONFIG_FILE" ]; then
+    cp "$RS_CONFIG_FILE" "${RS_CONFIG_FILE}.bak"
+    echo "Backed up $RS_CONFIG_FILE to ${RS_CONFIG_FILE}.bak"
+  fi
+
+  # Replace the config file with the new one
+  echo "Replacing $RS_CONFIG_FILE with the latest configuration."
+  mv "$TEMP_RS_CONFIG" "$RS_CONFIG_FILE"
 }
 
 # Function to check if DAWbox is installed
@@ -68,6 +90,7 @@ dawbox_install() {
         echo "Installing DAWbox..."
         distrobox assemble create --file /etc/distrobox/dawbox.ini
         distrobox stop dawbox
+        raysession_config
         echo "DAWbox installed successfully."
         return 0 #DAWbox was installed.
     else
