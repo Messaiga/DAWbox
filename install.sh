@@ -132,7 +132,7 @@ dawbox_update() {
         distrobox upgrade dawbox
         return 0 # DAWbox is already installed, we can update it.
     elif [ "$check_result" -eq 1 ]; then
-        echo "Distrobox isn't installed, there's nothing to update."
+        echo "DAWbox isn't installed, there's nothing to update."
         return 0 # DAWbox is not installed, there's nothing to update.
     else
         echo "Error checking DAWbox status."
