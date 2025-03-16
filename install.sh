@@ -135,19 +135,15 @@ dawbox_prompt() {
         case "$choice" in
             1)
                 dawbox_check
-                return 0
                 ;;
             2)
                 dawbox_install
-                return 0
                 ;;
             3)
                 dawbox_update
-                return 0
                 ;;
             4)
                 dawbox_rm 
-                return 0
                 ;;
             5)
                 echo "Exiting..."
