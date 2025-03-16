@@ -11,7 +11,8 @@ You will need:
 - [Distrobox](https://github.com/89luca89/distrobox)
 - To be comfortable opening a terminal and running the install script in CLI
 
-## Installation
+## Setup
+
 Open your terminal of choice and run:
 ```
 curl -sL https://raw.githubusercontent.com/Messaiga/DAWbox/refs/heads/main/install.sh -o install.sh && chmod +x install.sh && ./install.sh
@@ -22,3 +23,22 @@ curl -sL https://raw.githubusercontent.com/Messaiga/DAWbox/refs/heads/main/insta
 - Select 3 to update dawbox.
 - Select 4 to remove dawbox.
 - Select 5 to exit.
+
+## Key Software
+
+Here's a quick highlight reel of the software packaged in DAWbox:
+- [Ardour](https://ardour.org/)
+- [Calf-plugins](https://calf-studio-gear.org/)
+- [Carla](https://kx.studio/Applications:Carla)
+- [Guitarix](http://guitarix.org/)
+- [LMMS](https://lmms.io/)
+- [Lsp-plugins](https://lsp-plugins.com/)
+- [QTractor](https://www.rncbc.org/drupal/qtractor)
+- [Rackarrack](https://github.com/Rackarrack/rackarrack)
+- [Raysession](https://raysession.org/)
+- [Surge-XT](https://surge-synthesizer.github.io/)
+- [Tal-plugins](https://tal-software.com/)
+- [Tap-plugins](https://tap-plugins.sourceforge.net/)
+- [Zam-plugins](https://www.zamaudio.com/)
+
+...And a lot more thanks to the [KX.Studio](https://kx.studio/) repo.  Please consider sending contributions or donations to any of these projects!
