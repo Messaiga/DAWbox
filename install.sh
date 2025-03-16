@@ -95,6 +95,7 @@ dawbox_install() {
     #Check if DAWbox is already installed
     dawbox_check
     local check_result=$?
+    local INITIALIZED_MARKER="/etc/distrobox/dawbox_initialized"
 
     if [ "$check_result" -eq 0 ]; then
         echo "DAWbox is already installed.  Skipping installation."
@@ -102,7 +103,16 @@ dawbox_install() {
     elif [ "$check_result" -eq 1 ]; then
         echo "Installing DAWbox..."
         distrobox assemble create --file /etc/distrobox/dawbox.ini
-        distrobox stop dawbox
+        
+        # Check if the initialization marker file exists
+        if [ ! -f "$INITIALIZED_MARKER" ]; then
+            echo "First run detected. Stopping and restarting DAWbox for proper initialization..."
+            distrobox stop dawbox
+            distrobox start dawbox
+            touch "$INITIALIZED_MARKER"
+            echo "DAWbox initialized."
+        fi
+        
         echo "DAWbox installed successfully."
         return 0 #DAWbox was installed.
     else
@@ -110,6 +120,7 @@ dawbox_install() {
         return 1 # Error checking DAWbox status.
     fi
 }
+
 
 # Function to update DAWbox
 dawbox_update() {
@@ -125,7 +136,7 @@ dawbox_update() {
         distrobox upgrade dawbox
         return 0 # DAWbox is already installed, we can update it.
     elif [ "$check_result" -eq 1 ]; then
-        echo "Distrobox isn't installed, there's nothing to update."
+        echo "DAWbox isn't installed, there's nothing to update."
         return 0 # DAWbox is not installed, there's nothing to update.
     else
         echo "Error checking DAWbox status."
