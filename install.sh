@@ -89,6 +89,40 @@ dawbox_check() {
     fi
 }
 
+# Function to create the marker file
+dawbox_create_marker() {
+  local marker_file="$1"
+  if [ ! -w "$(dirname "$marker_file")" ]; then
+    echo "Insufficient permissions to create $marker_file."
+    echo "Attempting to create marker with sudo..."
+    sudo touch "$marker_file"
+  else
+    touch "$marker_file"
+  fi
+}
+
+# Function to check if the marker file exists
+dawbox_check_marker() {
+    local marker_file="$1"
+    if [ -f "$marker_file" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to remove the marker file
+dawbox_rm_marker() {
+  local marker_file="$1"
+  if [ ! -w "$(dirname "$marker_file")" ]; then
+    echo "Insufficient permissions to remove $marker_file."
+    echo "Attempting to remove marker with sudo..."
+    sudo rm "$marker_file"
+  else
+    rm "$marker_file"
+  fi
+}
+
 # Function to install DAWbox
 dawbox_install() {
     # Call the dawbox_config function to execute the configuration logic
@@ -107,12 +141,16 @@ dawbox_install() {
         distrobox assemble create --file /etc/distrobox/dawbox.ini
         
         # Check if the initialization marker file exists
-        if [ ! -f "$INITIALIZED_MARKER" ]; then
+        dawbox_check_marker "$INITIALIZED_MARKER"
+        local marker_check_result=$?
+        if [ "$marker_check_result" -ne 0 ]; then
             echo "First run detected. Stopping DAWbox for proper initialization..."
             distrobox stop dawbox
             #distrobox start dawbox
-            touch "$INITIALIZED_MARKER"
+            dawbox_create_marker "$INITIALIZED_MARKER"
             echo "DAWbox initialized."
+        else
+            echo "DAWbox already initialized."
         fi
         
         echo "DAWbox installed successfully."
@@ -175,8 +213,9 @@ dawbox_prompt() {
         echo "  2) Install DAWbox"
         echo "  3) Update DAWbox"
         echo "  4) Remove DAWbox"
-        echo "  5) Exit"
-        read -p "Enter your choice (1-5): " choice
+        echo "  5) Remove Initialization Marker"
+        echo "  6) Exit"
+        read -p "Enter your choice (1-6): " choice
 
         case "$choice" in
             1)
@@ -192,11 +231,14 @@ dawbox_prompt() {
                 dawbox_rm
                 ;;
             5)
+                dawbox_rm_marker "$INITIALIZED_MARKER"
+                ;;
+            6)
                 echo "Exiting..."
                 return 0
                 ;;
             *)
-                echo "Invalid choice. Please enter 1, 2, 3, 4, or 5"
+                echo "Invalid choice. Please enter 1, 2, 3, 4, 5, or 6"
                 ;;
         esac
     done
