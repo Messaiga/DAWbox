@@ -5,6 +5,10 @@ LABEL com.github.containers.toolbox="true" \
     summary="An Ubuntu based OCI ready for music production, powered by Distrobox." \
     maintainer="messaiga@gmail.com"
 
+# Set environment variables
+ENV GDK_BACKEND=x11
+ENV QT_QPA_PLATFORM=xcb
+
 # Copy the setup scripts and package list
 COPY ../scripts/dawbox.sh /
 COPY ../scripts/distrobox-shims.sh /
