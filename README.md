@@ -24,6 +24,12 @@ curl -sL https://raw.githubusercontent.com/Messaiga/DAWbox/refs/heads/main/insta
 - Select 4 to remove dawbox.
 - Select 5 to exit.
 
+After first run you may have to run this inside of the box for fonts to work in certain programs:
+
+```
+sudo fc-cache -Ers
+```
+
 ## Key Software
 
 Here's a quick highlight reel of the software packaged in DAWbox:
